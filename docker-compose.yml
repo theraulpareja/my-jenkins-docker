@@ -1,0 +1,64 @@
+version: '3.7' 
+
+networks:
+  cinet:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.251.0/24
+
+volumes: 
+  jenkins_home:
+
+services:
+  jenkins_master:
+    build:
+      context: jenkinsMaster/
+#     args:
+#       lts_version: '2.164.3'
+#       jenkins_usr: 'admin'
+#       jenkins_pass: 'admin'
+      args:
+        - lts_version=2.164.3
+        - jenkins_usr=admin
+        - jenkins_pass=admin
+
+#   ports:
+#    - "8080:8080"
+#    - "50000:50000"
+    ports:
+     - "8080"
+     - "50000"
+    volumes:
+     - jenkins_home:/var/jenkins_home
+    networks:
+      cinet:
+        ipv4_address: 192.168.251.2
+  ubuntu_slave1:
+    build: nodeUbuntu/
+#   ports:
+#    - "8081:22"
+    ports:
+     - "22"
+    networks:
+      cinet:
+        ipv4_address: 192.168.251.3
+  ubuntu_slave2:
+    build: nodeUbuntu/
+#   ports:
+#    - "8082:22"
+    ports:
+     - "22"
+    networks:
+      cinet:
+        ipv4_address: 192.168.251.4
+  ubuntu_slave3:
+    build: nodeUbuntu/
+#   ports:
+#    - "8083:22"
+    ports:
+     - "22"
+    networks:
+       cinet:
+        ipv4_address: 192.168.251.5
